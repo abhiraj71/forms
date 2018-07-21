@@ -1,0 +1,54 @@
+<form [formGroup]="form" [id]="formId" (submit)="submit()">
+  <div class="row">
+    <ng-template ngFor [ngForOf]="fields" let-field let-i="index">
+      <ng-template [ngIf]="field.isVisible !== false">
+        <div class="col-12 {{field?.classNames}}">
+          <div class="form-group">
+            <ng-template [ngIf]="field.label">
+              <label [for]="field.id">{{ field.label }}
+                <sup class="text-danger" *ngIf="field?.validators?.required">*</sup></label>
+            </ng-template>
+            <ng-container [ngSwitch]="field.type">
+              <ng-template ngSwitchCase="html">
+                <div [innerHTML]="field.content"></div>
+              </ng-template>
+              <ng-template ngSwitchCase="image">
+                <!--<ngx-img [config]="{ height: '250px' }" (onSelect)="onImageEvent(field, $event)"></ngx-img>-->
+              </ng-template>
+              <ng-template ngSwitchCase="select">
+                <ng-select [items]="field.options" addTagText="Add" [addTag]="field.canAdd" bindLabel="label" bindValue="value" [multiple]="field.multiple" [closeOnSelect]="!field.multiple" [clearable]="field.multiple" [formControlName]="field.name" [labelForId]="field.id" (change)="onSelectEvent(field, $event)" (add)="onAddEvent(field, $event)"></ng-select>
+              </ng-template>
+              <ng-template ngSwitchCase="textarea">
+                <textarea class="form-control" [formControlName]="field.name" [id]="field.id"></textarea>
+              </ng-template>
+              <ng-template ngSwitchCase="checkbox">
+                <ng-template ngFor [ngForOf]="field.options" let-option let-j="index">
+                  <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" [value]="option.value" [id]="option.id" [formControlName]="option.name">
+                    <label class="custom-control-label" [for]="option.id">{{ option.label }}</label>
+                  </div>
+                </ng-template>
+              </ng-template>
+              <ng-template ngSwitchCase="radio">
+                <ng-template ngFor [ngForOf]="field.options" let-option let-j="index">
+                  <div class="custom-control custom-radio">
+                    <input type="radio" class="custom-control-input" [value]="option.value" [id]="option.id" [formControlName]="field.name">
+                    <label class="custom-control-label" [for]="option.id">{{ option.label }}</label>
+                  </div>
+                </ng-template>
+              </ng-template>
+              <ng-template ngSwitchDefault>
+                <input class="form-control" [type]="field.type" [formControlName]="field.name" [id]="field.id">
+              </ng-template>
+            </ng-container>
+            <ng-template [ngIf]="field.validators">
+              <ng-template ngFor [ngForOf]="Object.keys(field.validators)" let-key>
+                <div class="invalid-feedback" *ngIf="form?.controls[field.name]?.touched && form?.controls[field.name]?.errors && form?.controls[field.name]?.errors[key]">{{ field?.validators[key]?.message }}</div>
+              </ng-template>
+            </ng-template>
+          </div>
+        </div>
+      </ng-template>
+    </ng-template>
+  </div>
+</form>
