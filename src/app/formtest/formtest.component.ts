@@ -27,18 +27,6 @@ export class FormtestComponent implements OnInit {
         }
       }
     },
-    {
-      name: 'role',
-      label: 'Role',
-      type: 'select',
-      value: 'SERVICE_PROVIDER',
-      options: [],
-      validators: {
-        required: {
-          message: 'Role is required'
-        }
-      }
-    }
   ];
   }
 
